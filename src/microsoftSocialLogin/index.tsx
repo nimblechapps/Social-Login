@@ -29,7 +29,8 @@ interface Props {
 
 const MICROSOFT_URL = "https://login.microsoftonline.com";
 const MICROSOFT_API_URL = "https://graph.microsoft.com";
-// const PREVENT_CORS_URL: string = 'https://cors.bridged.cc'
+// const PREVENT_CORS_URL: string = 'https://cors.bridged.cc/'
+const PREVENT_CORS_URL: string = "https://corsproxy.io/?";
 
 export const LoginSocialMicrosoft = ({
 	tenant = "common",
@@ -62,7 +63,7 @@ export const LoginSocialMicrosoft = ({
 
 	const getProfile = useCallback(
 		(data: objectType) => {
-			fetch(`${MICROSOFT_API_URL}/v1.0/me`, {
+			fetch(`${PREVENT_CORS_URL}${MICROSOFT_API_URL}/v1.0/me`, {
 				method: "GET",
 				headers: {
 					Authorization: `Bearer ${data.access_token}`,
@@ -99,11 +100,14 @@ export const LoginSocialMicrosoft = ({
 					"Content-Type":
 						"application/x-www-form-urlencoded;charset=UTF-8",
 				});
-				fetch(`${MICROSOFT_URL}/${tenant}/oauth2/v2.0/token`, {
-					method: "POST",
-					headers,
-					body: new URLSearchParams(params),
-				})
+				fetch(
+					`${PREVENT_CORS_URL}${MICROSOFT_URL}/${tenant}/oauth2/v2.0/token`,
+					{
+						method: "POST",
+						headers,
+						body: new URLSearchParams(params),
+					}
+				)
 					.then((response) => response.json())
 					.then((data) => {
 						if (data.access_token) {

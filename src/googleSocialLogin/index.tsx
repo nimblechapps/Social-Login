@@ -34,7 +34,9 @@ interface Props {
 // const JS_SRC = 'https://apis.google.com/js/api.js'
 const JS_SRC = "https://accounts.google.com/gsi/client";
 const SCRIPT_ID = "google-login";
-const PREVENT_CORS_URL: string = "https://cors.bridged.cc";
+// const PREVENT_CORS_URL: string = "https://cors.bridged.cc/";
+const PREVENT_CORS_URL: string = "https://corsproxy.io/?";
+
 const _window = window as any;
 
 const LoginSocialGoogle = ({
@@ -112,7 +114,7 @@ const LoginSocialGoogle = ({
 				console.log("in onGetMe");
 
 				fetch(
-					`https://www.googleapis.com/oauth2/v3/userinfo?alt=json`,
+					`${PREVENT_CORS_URL}https://www.googleapis.com/oauth2/v3/userinfo?alt=json`,
 					{
 						method: "GET",
 						headers,
@@ -133,7 +135,7 @@ const LoginSocialGoogle = ({
 					});
 			} else {
 				fetch(
-					`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${res.credential}`,
+					`${PREVENT_CORS_URL}https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${res.credential}`,
 					{
 						method: "GET",
 					}

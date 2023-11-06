@@ -3,8 +3,10 @@ import { LoginSocialInstagram } from "../instgramSocialLogin/index";
 import { IResolveParams, objectType } from "../export";
 
 const InstagramLoginComponent = () => {
-	const REDIRECT_URI = "https://localhost:3000/";
-	// const REDIRECT_URI = "https://angus-web-34c936ffa643.herokuapp.com/";
+	// const REDIRECT_URI = "https://819c-122-170-2-163.ngrok-free.app/";
+	const REDIRECT_URI = window.location.href;
+	console.log(REDIRECT_URI);
+
 	const [isLogedIn, setIsLogedIn] = useState(false);
 	const [userDetails, setUserDetails] = useState<objectType | null>(null);
 
@@ -45,9 +47,7 @@ const InstagramLoginComponent = () => {
 					}}>
 					{userDetails && (
 						<>
-							<p>
-								Hello, {userDetails?.userPrincipalName || "XYZ"}{" "}
-							</p>
+							<p>Hello, {userDetails?.username || "XYZ"} </p>
 							<img
 								style={{
 									height: 50,
@@ -74,7 +74,7 @@ const InstagramLoginComponent = () => {
 					redirect_uri={REDIRECT_URI}
 					onResolve={handleLogin}
 					onReject={(error) =>
-						console.error("instagram login rejected", error)
+						console.log("instagram login rejected", error)
 					}>
 					<button>Login with Instgram</button>
 				</LoginSocialInstagram>
