@@ -59,7 +59,7 @@ const GoogleLoginComponent = () => {
 			) : (
 				<LoginSocialGoogle
 					isOnlyGetToken={false}
-					client_id='1083343705633-q1d64vu0nfv2pglvglisj9jkohhf926e.apps.googleusercontent.com'
+					client_id={process.env.REACT_APP_GOOGLE_APP_ID || ""}
 					onResolve={handleLogin}
 					onReject={(error) =>
 						console.log("google login rejected", error)

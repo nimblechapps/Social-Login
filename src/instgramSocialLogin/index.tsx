@@ -28,7 +28,8 @@ interface Props {
 
 const INSTAGRAM_URL = "https://api.instagram.com";
 const INSTAGRAM_API_URL = "https://graph.instagram.com/";
-const PREVENT_CORS_URL: string = "https://cors.bridged.cc";
+// const PREVENT_CORS_URL: string = "https://cors.bridged.cc/";
+const PREVENT_CORS_URL: string = "https://corsproxy.io/?";
 
 export const LoginSocialInstagram = ({
 	state = "",
@@ -50,19 +51,18 @@ export const LoginSocialInstagram = ({
 		const popupWindowURL = new URL(window.location.href);
 		const code = popupWindowURL.searchParams.get("code");
 		const state = popupWindowURL.searchParams.get("state");
-		console.log("code", code);
 
 		if (state?.includes("_instagram") && code) {
 			localStorage.setItem("instagram", code);
 			window.close();
 		}
-	}, [window.location.href]);
+	}, []);
 
 	const getProfile = useCallback(
 		(data: objectType) => {
 			fetch(
-				// `${PREVENT_CORS_URL}/${INSTAGRAM_API_URL}/me?fields=${fields}&access_token=${data.access_token}`,
-				`${INSTAGRAM_API_URL}/me?fields=${fields}&access_token=${data.access_token}`,
+				`${PREVENT_CORS_URL}${INSTAGRAM_API_URL}/me?fields=${fields}&access_token=${data.access_token}`,
+				// `${INSTAGRAM_API_URL}/me?fields=${fields}&access_token=${data.access_token}`,
 				{
 					method: "GET",
 					headers: {
@@ -101,8 +101,8 @@ export const LoginSocialInstagram = ({
 					//   'x-cors-grida-api-key': PASS_CORS_KEY,
 				});
 				fetch(
-					// `${PREVENT_CORS_URL}/${INSTAGRAM_URL}/oauth/access_token`,
-					`${INSTAGRAM_URL}/oauth/access_token`,
+					`${PREVENT_CORS_URL}${INSTAGRAM_URL}/oauth/access_token`,
+					// `${INSTAGRAM_URL}/oauth/access_token`,
 					{
 						method: "POST",
 						headers,
@@ -111,8 +111,6 @@ export const LoginSocialInstagram = ({
 				)
 					.then((response) => response.json())
 					.then((data) => {
-						console.log("data", data);
-
 						if (data.access_token) {
 							if (isOnlyGetToken)
 								onResolve({ provider: "instagram", data });
@@ -120,6 +118,7 @@ export const LoginSocialInstagram = ({
 						} else onReject("no data");
 					})
 					.catch((err) => {
+						console.log("err", err);
 						onReject(err);
 					})
 					.finally(() => {});
@@ -151,7 +150,7 @@ export const LoginSocialInstagram = ({
 		const code = localStorage.getItem("instagram");
 		if (code) {
 			handlePostMessage({ provider: "instagram", type: "code", code });
-			// localStorage.removeItem("instagram");
+			localStorage.removeItem("instagram");
 		}
 	}, [handlePostMessage]);
 

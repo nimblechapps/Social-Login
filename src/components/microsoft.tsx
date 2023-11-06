@@ -68,7 +68,7 @@ const MicrosoftLoginComponent = () => {
 			) : (
 				<LoginSocialMicrosoft
 					// isOnlyGetToken
-					client_id='a7e498ec-bd04-4ccf-84e0-a3c17e8ac4b7'
+					client_id={process.env.REACT_APP_MICROSOFT_APP_ID || ""}
 					redirect_uri={REDIRECT_URI}
 					onResolve={handleLogin}
 					onReject={(error) =>
