@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { LoginSocialInstagram } from "../instgramSocialLogin/index";
 import { IResolveParams, objectType } from "../export";
+import { InstagramLoginButton } from "react-social-login-buttons";
 
 const InstagramLoginComponent = () => {
 	// const REDIRECT_URI = "https://819c-122-170-2-163.ngrok-free.app/";
@@ -38,29 +39,17 @@ const InstagramLoginComponent = () => {
 	return (
 		<>
 			{isLogedIn ? (
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "row",
-						justifyContent: "center",
-						alignItems: "center",
-					}}>
+				<div className='logoutContainer'>
 					{userDetails && (
-						<>
-							<p>Hello, {userDetails?.username || "XYZ"} </p>
-							<img
-								style={{
-									height: 50,
-									borderRadius: "100%",
-									marginLeft: 10,
-									marginRight: 10,
-								}}
+						<div>
+							<p>Hello, {userDetails?.username || "User"} </p>
+							{/* <img className="image"
 								src={userDetails?.picture || ""}
 								alt=''
-							/>
-						</>
+							/> */}
+						</div>
 					)}
-					<button onClick={handleLogout}>
+					<button className='btnLogout' onClick={handleLogout}>
 						Logout from Instagram
 					</button>
 				</div>
@@ -76,7 +65,7 @@ const InstagramLoginComponent = () => {
 					onReject={(error) =>
 						console.log("instagram login rejected", error)
 					}>
-					<button>Login with Instgram</button>
+					<InstagramLoginButton />
 				</LoginSocialInstagram>
 			)}
 		</>

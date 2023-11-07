@@ -111,7 +111,6 @@ const LoginSocialGoogle = ({
 					//   'x-cors-grida-api-key': PASS_CORS_KEY,
 					Authorization: "Bearer " + res.access_token,
 				});
-				console.log("in onGetMe");
 
 				fetch(
 					`${PREVENT_CORS_URL}https://www.googleapis.com/oauth2/v3/userinfo?alt=json`,
@@ -123,7 +122,7 @@ const LoginSocialGoogle = ({
 					.then((response) => response.json())
 					.then((response) => {
 						const data: objectType = { ...res, ...response };
-						console.log("onGetMe ==>", data);
+						// console.log("onGetMe ==>", data);
 
 						onResolve({
 							provider: "google",
