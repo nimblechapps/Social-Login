@@ -2,6 +2,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { LoginSocialMicrosoft } from "../microsoftSocialLogin/index";
 import { IResolveParams, objectType } from "../export";
+import { MicrosoftLoginButton } from "react-social-login-buttons";
 
 const MicrosoftLoginComponent = () => {
 	const REDIRECT_URI = window.location.href;
@@ -37,31 +38,20 @@ const MicrosoftLoginComponent = () => {
 	return (
 		<>
 			{isLogedIn ? (
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "row",
-						justifyContent: "center",
-						alignItems: "center",
-					}}>
+				<div className='logoutContainer'>
 					{userDetails && (
-						<>
+						<div>
 							<p>
-								Hello, {userDetails?.userPrincipalName || "XYZ"}{" "}
+								Hello,{" "}
+								{userDetails?.userPrincipalName || "User"}{" "}
 							</p>
-							<img
-								style={{
-									height: 50,
-									borderRadius: "100%",
-									marginLeft: 10,
-									marginRight: 10,
-								}}
+							{/* <img className="image"
 								src={userDetails?.picture || ""}
 								alt=''
-							/>
-						</>
+							/> */}
+						</div>
 					)}
-					<button onClick={handleLogout}>
+					<button className='btnLogout' onClick={handleLogout}>
 						Logout from Microsoft
 					</button>
 				</div>
@@ -74,7 +64,7 @@ const MicrosoftLoginComponent = () => {
 					onReject={(error) =>
 						console.error("microsoft login rejected", error)
 					}>
-					<button>Login with Microsoft</button>
+					<MicrosoftLoginButton />
 				</LoginSocialMicrosoft>
 			)}
 		</>

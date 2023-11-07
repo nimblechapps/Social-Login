@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { LoginSocialGithub } from "../githubSocialLogin/index";
 import { IResolveParams, objectType } from "../export";
+import { GithubLoginButton } from "react-social-login-buttons";
 
 const GitHubLoginComponent = () => {
 	const REDIRECT_URI = window.location.href;
@@ -34,29 +35,24 @@ const GitHubLoginComponent = () => {
 	return (
 		<>
 			{isLogedIn ? (
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "row",
-						justifyContent: "center",
-						alignItems: "center",
-					}}>
+				<div className='logoutContainer'>
 					{userDetails && (
-						<>
-							<p>Hello, {userDetails?.name || "XYZ"} </p>
-							<img
-								style={{
-									height: 50,
-									borderRadius: "100%",
-									marginLeft: 10,
-									marginRight: 10,
-								}}
+						<div>
+							<p>
+								Hello,{" "}
+								{userDetails?.name ||
+									userDetails?.login ||
+									"User"}
+							</p>
+							{/* <img className="image"
 								src={userDetails?.picture || ""}
 								alt=''
-							/>
-						</>
+							/> */}
+						</div>
 					)}
-					<button onClick={handleLogout}>Logout from Github</button>
+					<button className='btnLogout' onClick={handleLogout}>
+						Logout from Github
+					</button>
 				</div>
 			) : (
 				<LoginSocialGithub
@@ -70,7 +66,7 @@ const GitHubLoginComponent = () => {
 					onReject={(error) =>
 						console.error("github login rejected", error)
 					}>
-					<button>Login With Github</button>
+					<GithubLoginButton />
 				</LoginSocialGithub>
 			)}
 		</>

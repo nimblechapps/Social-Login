@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { IResolveParams, LoginSocialGoogle, objectType } from "../export";
-import { ObjectType } from "typescript";
+import { GoogleLoginButton } from "react-social-login-buttons";
 
 const GoogleLoginComponent = () => {
 	const [isLogedIn, setIsLogedIn] = useState(false);
@@ -32,39 +32,29 @@ const GoogleLoginComponent = () => {
 	return (
 		<>
 			{isLogedIn ? (
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "row",
-						justifyContent: "center",
-						alignItems: "center",
-					}}>
+				<div className='logoutContainer'>
 					{userDetails && (
-						<>
-							<p>Hello, {userDetails?.name || "XYZ"} </p>
-							<img
-								style={{
-									height: 50,
-									borderRadius: "100%",
-									marginLeft: 10,
-									marginRight: 10,
-								}}
+						<div>
+							<p>Hello, {userDetails?.name || "User"} </p>
+							{/* <img className="image"
 								src={userDetails?.picture || ""}
 								alt=''
-							/>
-						</>
+							/> */}
+						</div>
 					)}
-					<button onClick={handleLogout}>Logout from Google</button>
+					<button className='btnLogout' onClick={handleLogout}>
+						Logout from Google
+					</button>
 				</div>
 			) : (
 				<LoginSocialGoogle
-					isOnlyGetToken={false}
+					// isOnlyGetToken
 					client_id={process.env.REACT_APP_GOOGLE_APP_ID || ""}
 					onResolve={handleLogin}
 					onReject={(error) =>
 						console.log("google login rejected", error)
 					}>
-					<button>Login with Google</button>
+					<GoogleLoginButton />
 				</LoginSocialGoogle>
 			)}
 		</>
