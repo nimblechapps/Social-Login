@@ -9,11 +9,11 @@ function App() {
 		<>
 			<div className='App'>
 				<h1>Social Login</h1>
-				<FacebookLoginComponent /> <br />
-				<GitHubLoginComponent /> <br />
 				<GoogleLoginComponent /> <br />
 				<MicrosoftLoginComponent /> <br />
+				<FacebookLoginComponent /> <br />
 				<InstagramLoginComponent /> <br />
+				<GitHubLoginComponent /> <br />
 			</div>
 		</>
 	);
