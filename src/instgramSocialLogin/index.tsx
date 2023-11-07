@@ -1,12 +1,7 @@
 /* eslint-disable camelcase */
-/**
- *
- * LoginSocialInstagram
- *
- */
-// import { PASS_CORS_KEY } from 'helper/constants';
+/* LoginSocialInstagram */
 import React, { memo, useCallback, useEffect } from "react";
-import { objectType, IResolveParams } from "../export";
+import { objectType, IResolveParams } from "../types";
 
 interface Props {
 	scope?: string;
@@ -28,10 +23,14 @@ interface Props {
 
 const INSTAGRAM_URL = "https://api.instagram.com";
 const INSTAGRAM_API_URL = "https://graph.instagram.com/";
-// const PREVENT_CORS_URL: string = "https://cors.bridged.cc/";
 const PREVENT_CORS_URL: string = "https://corsproxy.io/?";
 
-export const LoginSocialInstagram = ({
+/**
+ * A component that allows users to log in with Instagram.
+ * @param {Props} props - The component props.
+ * @returns The LoginSocialInstagram component.
+ */
+const LoginSocialInstagram = ({
 	state = "",
 	client_id,
 	client_secret,
@@ -47,6 +46,13 @@ export const LoginSocialInstagram = ({
 	onResolve,
 	onLoginStart,
 }: Props) => {
+	/**
+	 * useEffect hook that runs once when the component mounts. It checks if the current URL
+	 * contains a "code" and "state" parameter. If the "state" parameter includes "_instagram"
+	 * and the "code" parameter is present, it saves the "code" value to the "instagram" key in
+	 * the localStorage and closes the window.
+	 * @returns None
+	 */
 	useEffect(() => {
 		const popupWindowURL = new URL(window.location.href);
 		const code = popupWindowURL.searchParams.get("code");
@@ -58,11 +64,15 @@ export const LoginSocialInstagram = ({
 		}
 	}, []);
 
+	/**
+	 * Retrieves the profile information of a user from Instagram API.
+	 * @param {objectType} data - The data object containing the access token.
+	 * @returns None
+	 */
 	const getProfile = useCallback(
 		(data: objectType) => {
 			fetch(
 				`${PREVENT_CORS_URL}${INSTAGRAM_API_URL}/me?fields=${fields}&access_token=${data.access_token}`,
-				// `${INSTAGRAM_API_URL}/me?fields=${fields}&access_token=${data.access_token}`,
 				{
 					method: "GET",
 					headers: {
@@ -84,6 +94,11 @@ export const LoginSocialInstagram = ({
 		[fields, onReject, onResolve]
 	);
 
+	/**
+	 * Retrieves an access token from Instagram using the provided authorization code.
+	 * @param {string} code - The authorization code obtained from the user.
+	 * @returns None
+	 */
 	const getAccessToken = useCallback(
 		(code: string) => {
 			if (isOnlyGetCode)
@@ -102,7 +117,6 @@ export const LoginSocialInstagram = ({
 				});
 				fetch(
 					`${PREVENT_CORS_URL}${INSTAGRAM_URL}/oauth/access_token`,
-					// `${INSTAGRAM_URL}/oauth/access_token`,
 					{
 						method: "POST",
 						headers,
@@ -136,6 +150,11 @@ export const LoginSocialInstagram = ({
 		]
 	);
 
+	/**
+	 * Handles the post message received from the Instagram provider.
+	 * @param {objectType} object - The object containing the type, code, and provider information.
+	 * @returns {Promise} - A promise that resolves to the access token.
+	 */
 	const handlePostMessage = useCallback(
 		async ({ type, code, provider }: objectType) =>
 			type === "code" &&
@@ -145,6 +164,12 @@ export const LoginSocialInstagram = ({
 		[getAccessToken]
 	);
 
+	/**
+	 * Callback function that is triggered when there is a change in the local storage.
+	 * It retrieves the code from the "instagram" key in the local storage, sends a post message
+	 * with the code to the specified provider, and removes the "instagram" key from the local storage.
+	 * @returns None
+	 */
 	const onChangeLocalStorage = useCallback(() => {
 		window.removeEventListener("storage", onChangeLocalStorage, false);
 		const code = localStorage.getItem("instagram");
@@ -154,6 +179,12 @@ export const LoginSocialInstagram = ({
 		}
 	}, [handlePostMessage]);
 
+	/**
+	 * Callback function that is triggered when the user clicks on the login button.
+	 * It starts the login process, adds an event listener for changes in local storage,
+	 * and opens a new window to the Instagram OAuth authorization URL.
+	 * @returns None
+	 */
 	const onLogin = useCallback(() => {
 		onLoginStart && onLoginStart();
 		window.addEventListener("storage", onChangeLocalStorage, false);
@@ -188,6 +219,13 @@ export const LoginSocialInstagram = ({
 		onChangeLocalStorage,
 	]);
 
+	/**
+	 * Renders a div element with the specified class name and click event handler.
+	 * @param {string} className - The class name to apply to the div element.
+	 * @param {function} onLogin - The click event handler function.
+	 * @param {ReactNode} children - The child elements to render inside the div.
+	 * @returns {JSX.Element} - The rendered div element.
+	 */
 	return (
 		<div className={className} onClick={onLogin}>
 			{children}
