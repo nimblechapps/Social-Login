@@ -171,7 +171,7 @@ export const LoginSocialGithub = ({
 			state + "_github"
 		}&redirect_uri=${redirect_uri}&allow_signup=${allow_signup}`;
 
-		console.log("oauthUrl", oauthUrl);
+		// console.log("oauthUrl", oauthUrl);
 
 		const width = 450;
 		const height = 730;

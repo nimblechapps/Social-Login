@@ -160,7 +160,7 @@ export const LoginSocialInstagram = ({
 		const oauthUrl = `${INSTAGRAM_URL}/oauth/authorize?response_type=${response_type}&client_id=${client_id}&scope=${scope}&state=${
 			state + "_instagram"
 		}&redirect_uri=${redirect_uri}`;
-		console.log("oauthUrl", oauthUrl);
+		// console.log("oauthUrl", oauthUrl);
 
 		const width = 450;
 		const height = 730;

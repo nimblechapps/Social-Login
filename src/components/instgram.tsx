@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginSocialInstagram } from "../instgramSocialLogin/index";
 import { IResolveParams, objectType } from "../export";
 import { InstagramLoginButton } from "react-social-login-buttons";

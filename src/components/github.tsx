@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginSocialGithub } from "../githubSocialLogin/index";
 import { IResolveParams, objectType } from "../export";
 import { GithubLoginButton } from "react-social-login-buttons";

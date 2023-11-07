@@ -30,7 +30,6 @@ interface Props {
 	onResolve: ({ provider, data }: IResolveParams) => void;
 }
 
-// const SCOPE = ''
 // const JS_SRC = 'https://apis.google.com/js/api.js'
 const JS_SRC = "https://accounts.google.com/gsi/client";
 const SCRIPT_ID = "google-login";
