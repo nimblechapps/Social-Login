@@ -1,18 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import LoginSocialFacebook from "../facebookSocialLogin/index";
 import { IResolveParams, objectType } from "../export";
-import {
-	FacebookLoginButton,
-	GoogleLoginButton,
-	GithubLoginButton,
-	AmazonLoginButton,
-	InstagramLoginButton,
-	LinkedInLoginButton,
-	MicrosoftLoginButton,
-	TwitterLoginButton,
-	AppleLoginButton,
-} from "react-social-login-buttons";
+import { FacebookLoginButton } from "react-social-login-buttons";
 
 const FacebookLoginComponent = () => {
 	const [isLogedIn, setIsLogedIn] = useState(false);
@@ -41,15 +31,6 @@ const FacebookLoginComponent = () => {
 		localStorage.setItem("facebookLoginDetails", JSON.stringify(data));
 	};
 
-	const buttonStyles = {
-		background: "#1877F2", // Facebook blue color
-		color: "white",
-		padding: "10px 20px",
-		borderRadius: "5px",
-		border: "none",
-		cursor: "pointer",
-		fontSize: "16px",
-	};
 	return (
 		<>
 			{isLogedIn ? (

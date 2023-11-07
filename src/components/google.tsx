@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { IResolveParams, LoginSocialGoogle, objectType } from "../export";
 import { GoogleLoginButton } from "react-social-login-buttons";
 

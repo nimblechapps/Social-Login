@@ -1,5 +1,5 @@
 /* eslint-disable no-empty-pattern */
-import React, { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { LoginSocialMicrosoft } from "../microsoftSocialLogin/index";
 import { IResolveParams, objectType } from "../export";
 import { MicrosoftLoginButton } from "react-social-login-buttons";
