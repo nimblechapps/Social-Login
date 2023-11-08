@@ -15,6 +15,8 @@ npm install
 
 ## Configure Environment Variables
 
+Create a .env file in the project's root directory. Add the necessary environment variables to this file. Below are the environment variables you may need, along with instructions on how to obtain them:
+
 ### Replace the following placeholders with your actual credentials
 
 REACT_APP_GOOGLE_APP_ID = your_google_app_id
@@ -38,10 +40,12 @@ To use this project, you need to set up the required Client ID and Client Secret
 
 1. Go to the [Google Developers Console](https://console.developers.google.com/).
 2. Create a new project.
-3. Navigate to "Credentials" under "APIs & Services."
-4. Create credentials and select "OAuth client ID."
-5. Configure the OAuth consent screen and provide information about your app.
-6. After creating the OAuth client ID, you can find the Client ID and Client Secret in the credentials details.
+3. Navigate to "OAuth consent screen" under "APIs & Services."
+4. Configure the OAuth consent screen and provide information about your app.
+5. Navigate to "Credentials" under "APIs & Services."
+6. Create credentials and select "OAuth client ID."
+7. Configure the Authorized JavaScript origins and Authorized redirect URI by entering localhost url or your website url.
+8. After creating the OAuth client ID, you can find the Client ID and Client Secret in the credentials details.
 
 ### Microsoft
 
@@ -61,13 +65,22 @@ To use this project, you need to set up the required Client ID and Client Secret
 4. Choose what do you want your app to do and provide a name for your app.
 5. Follow the setup instructions to create your app.
 6. Once your app is created, you can find the Client ID and Client Secret in the app's settings under "Basic" or "App Secret."
+7. In your app dashboard, go to "Facebook Login" on the left sidebar. Click on "Settings" under "Facebook Login."
+8. Under "Client OAuth Settings," set the following:
+   Client OAuth Login: Enable
+   Web OAuth Login: Enable
+   Login with the JavaScript SDK: Enable
+   Valid OAuth Redirect URIs & Allowed Domains for the JavaScript SDK: your website url
+9. Check other options and configure them as per your need.
 
 ### Instagram
 
 1. Instagram requires you to set up a Facebook App first. Follow the steps to create a Facebook App.
 2. After setting up a Facebook App, add Instagram Basic Display from Dashboard.
 3. Now, go to the Instagram Basic Display section using sidebar within your Facebook App.
-4. Configure Instagram Basic Display and obtain the Client ID and Client Secret.
+4. Configure Instagram Basic Display by adding required URLs and obtain the Client ID and Client Secret.
+
+Note: http will not work as any URL for Facebook and Instagram. Use tool like [ngrok](https://ngrok.com/) to run your website port on https.
 
 ### GitHub
 
