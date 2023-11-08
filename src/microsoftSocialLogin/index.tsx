@@ -5,7 +5,7 @@
  *
  */
 import React, { memo, useCallback, useEffect } from "react";
-import { IResolveParams, objectType } from "../export";
+import { IResolveParams, objectType } from "../types";
 
 interface Props {
 	scope?: string;
@@ -32,7 +32,12 @@ const MICROSOFT_API_URL = "https://graph.microsoft.com";
 // const PREVENT_CORS_URL: string = 'https://cors.bridged.cc/'
 const PREVENT_CORS_URL: string = "https://corsproxy.io/?";
 
-export const LoginSocialMicrosoft = ({
+/**
+ * A component that provides a login button for Microsoft authentication.
+ * @param {Props} Props - The component props.
+ * @returns The Microsoft login button component.
+ */
+const LoginSocialMicrosoft = ({
 	tenant = "common",
 	state = "",
 	client_id,
@@ -51,6 +56,13 @@ export const LoginSocialMicrosoft = ({
 	onReject,
 	onResolve,
 }: Props) => {
+	/**
+	 * useEffect hook that runs once when the component mounts. It checks if the current URL
+	 * contains a "code" parameter and a "state" parameter that includes "_microsoft". If both
+	 * conditions are met, it stores the "code" value in the localStorage with the key "microsoft"
+	 * and closes the current window.
+	 * @returns None
+	 */
 	useEffect(() => {
 		const popupWindowURL = new URL(window.location.href);
 		const code = popupWindowURL.searchParams.get("code");
@@ -61,6 +73,11 @@ export const LoginSocialMicrosoft = ({
 		}
 	}, []);
 
+	/**
+	 * Retrieves the user profile from the Microsoft API using the provided access token.
+	 * @param {objectType} data - The data object containing the access token.
+	 * @returns None
+	 */
 	const getProfile = useCallback(
 		(data: objectType) => {
 			fetch(`${PREVENT_CORS_URL}${MICROSOFT_API_URL}/v1.0/me`, {
@@ -83,6 +100,15 @@ export const LoginSocialMicrosoft = ({
 		[onReject, onResolve]
 	);
 
+	/**
+	 * Retrieves an access token from Microsoft OAuth2.0 endpoint using the provided code.
+	 * If `isOnlyGetCode` is true, it resolves with the code. Otherwise, it sends a POST request
+	 * to the Microsoft OAuth2.0 token endpoint with the necessary parameters and headers.
+	 * If the response contains an access token, it resolves with the token. Otherwise, it rejects
+	 * with the message "no data".
+	 * @param {string} code - The authorization code.
+	 * @returns None
+	 */
 	const getAccessToken = useCallback(
 		(code: string) => {
 			if (isOnlyGetCode)
@@ -137,6 +163,11 @@ export const LoginSocialMicrosoft = ({
 		]
 	);
 
+	/**
+	 * Handles the post message received from the Microsoft provider.
+	 * @param {objectType} message - The post message object containing the type, code, and provider.
+	 * @returns {Promise<void>} - A promise that resolves when the access token is retrieved.
+	 */
 	const handlePostMessage = useCallback(
 		async ({ type, code, provider }: objectType) =>
 			type === "code" &&
@@ -146,6 +177,12 @@ export const LoginSocialMicrosoft = ({
 		[getAccessToken]
 	);
 
+	/**
+	 * Callback function that is triggered when there is a change in the local storage.
+	 * It retrieves the code from the "microsoft" key in the local storage, sends a post message
+	 * with the code to the specified provider, and removes the "microsoft" key from the local storage.
+	 * @returns None
+	 */
 	const onChangeLocalStorage = useCallback(() => {
 		window.removeEventListener("storage", onChangeLocalStorage, false);
 		const code = localStorage.getItem("microsoft");
@@ -155,6 +192,10 @@ export const LoginSocialMicrosoft = ({
 		}
 	}, [handlePostMessage]);
 
+	/**
+	 * Callback function that handles the login process.
+	 * @returns None
+	 */
 	const onLogin = useCallback(() => {
 		onLoginStart && onLoginStart();
 		window.addEventListener("storage", onChangeLocalStorage, false);
@@ -198,6 +239,13 @@ export const LoginSocialMicrosoft = ({
 		code_challenge_method,
 	]);
 
+	/**
+	 * Renders a div element with the specified class name and click event handler.
+	 * @param {string} className - The class name to apply to the div element.
+	 * @param {function} onLogin - The click event handler function.
+	 * @param {ReactNode} children - The child elements to render inside the div.
+	 * @returns {JSX.Element} - The rendered div element.
+	 */
 	return (
 		<div className={className} onClick={onLogin}>
 			{children}

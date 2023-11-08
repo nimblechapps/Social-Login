@@ -6,7 +6,7 @@
  */
 // import { PASS_CORS_KEY } from 'helper/constants';
 import React, { memo, useCallback, useEffect } from "react";
-import { IResolveParams, objectType } from "../export";
+import { IResolveParams, objectType } from "../types";
 
 interface Props {
 	state?: string;
@@ -27,10 +27,14 @@ interface Props {
 
 const GITHUB_URL: string = "https://github.com";
 const GITHUB_API_URL: string = "https://api.github.com";
-// const PREVENT_CORS_URL: string = "https://cors.bridged.cc/";
 const PREVENT_CORS_URL: string = "https://corsproxy.io/?";
 
-export const LoginSocialGithub = ({
+/**
+ * A component that allows users to log in using their GitHub account.
+ * @param {Props} props - The component props.
+ * @returns The LoginSocialGithub component.
+ */
+const LoginSocialGithub = ({
 	state = "",
 	scope = "repo,gist",
 	client_id,
@@ -45,6 +49,14 @@ export const LoginSocialGithub = ({
 	onResolve,
 	onLoginStart,
 }: Props) => {
+	/**
+	 * useEffect hook that runs once when the component mounts. It checks if the current URL
+	 * contains a "code" and "state" parameter. If the "state" parameter includes "_github" and
+	 * the "code" parameter is present, it saves the "code" value to the "github" key in the
+	 * localStorage and closes the window.
+	 * @returns None
+	 */
+
 	useEffect(() => {
 		const popupWindowURL = new URL(window.location.href);
 		const code = popupWindowURL.searchParams.get("code");
@@ -55,19 +67,20 @@ export const LoginSocialGithub = ({
 		}
 	}, []);
 
+	/**
+	 * Retrieves the user profile data from the GitHub API using the provided access token.
+	 * @param {objectType} data - The object containing the access token.
+	 * @returns None
+	 */
 	const getProfile = useCallback(
 		(data: objectType) => {
-			fetch(
-				`${PREVENT_CORS_URL}${GITHUB_API_URL}/user`,
-				// `${GITHUB_API_URL}/user`,
-				{
-					method: "GET",
-					headers: {
-						Authorization: `token ${data.access_token}`,
-						//   'x-cors-grida-api-key': PASS_CORS_KEY,
-					},
-				}
-			)
+			fetch(`${PREVENT_CORS_URL}${GITHUB_API_URL}/user`, {
+				method: "GET",
+				headers: {
+					Authorization: `token ${data.access_token}`,
+					//   'x-cors-grida-api-key': PASS_CORS_KEY,
+				},
+			})
 				.then((res) => res.json())
 				.then((response: any) => {
 					// console.log("github profile => ", response);
@@ -84,6 +97,11 @@ export const LoginSocialGithub = ({
 		[onReject, onResolve]
 	);
 
+	/**
+	 * Retrieves an access token from the GitHub API using the provided code.
+	 * @param {string} code - The authorization code obtained from the user.
+	 * @returns None
+	 */
 	const getAccessToken = useCallback(
 		(code: string) => {
 			if (isOnlyGetCode)
@@ -103,7 +121,6 @@ export const LoginSocialGithub = ({
 
 				fetch(
 					`${PREVENT_CORS_URL}${GITHUB_URL}/login/oauth/access_token`,
-					// `${GITHUB_URL}/login/oauth/access_token`,
 					{
 						method: "POST",
 						headers,
@@ -144,6 +161,11 @@ export const LoginSocialGithub = ({
 		]
 	);
 
+	/**
+	 * Handles the post message received from the parent window.
+	 * @param {object} object - The object containing the type, code, and provider properties.
+	 * @returns {Promise} - A promise that resolves to the access token if the type is "code" and the provider is "github", otherwise undefined.
+	 */
 	const handlePostMessage = useCallback(
 		async ({ type, code, provider }: objectType) =>
 			type === "code" &&
@@ -153,6 +175,14 @@ export const LoginSocialGithub = ({
 		[getAccessToken]
 	);
 
+	/**
+	 * Callback function that is triggered when the local storage changes.
+	 * It retrieves the code from the "github" key in the local storage,
+	 * logs it to the console, and then removes the "github" key from the local storage.
+	 * Finally, it calls the handlePostMessage function with the provider set to "github",
+	 * the type set to "code", and the retrieved code as the payload.
+	 * @returns None
+	 */
 	const onChangeLocalStorage = useCallback(() => {
 		window.removeEventListener("storage", onChangeLocalStorage, false);
 		const code = localStorage.getItem("github");
@@ -164,6 +194,11 @@ export const LoginSocialGithub = ({
 		}
 	}, [handlePostMessage]);
 
+	/**
+	 * Callback function that is triggered when the user clicks on the login button.
+	 * This function performs the necessary steps to initiate the login process.
+	 * @returns None
+	 */
 	const onLogin = useCallback(() => {
 		onLoginStart && onLoginStart();
 		window.addEventListener("storage", onChangeLocalStorage, false);
@@ -199,6 +234,13 @@ export const LoginSocialGithub = ({
 		onChangeLocalStorage,
 	]);
 
+	/**
+	 * Renders a div element with the specified class name and click event handler.
+	 * @param {string} className - The class name to apply to the div element.
+	 * @param {function} onLogin - The click event handler function.
+	 * @param {ReactNode} children - The child elements to render inside the div.
+	 * @returns {JSX.Element} - The rendered div element.
+	 */
 	return (
 		<div className={className} onClick={onLogin}>
 			{children}

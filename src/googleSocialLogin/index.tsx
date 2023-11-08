@@ -6,7 +6,7 @@
  */
 // import { PASS_CORS_KEY } from 'helper/constants';
 import React, { memo, useCallback, useEffect, useRef, useState } from "react";
-import { objectType, IResolveParams } from "../export";
+import { objectType, IResolveParams } from "../types";
 
 interface Props {
 	scope?: string;
@@ -30,14 +30,16 @@ interface Props {
 	onResolve: ({ provider, data }: IResolveParams) => void;
 }
 
-// const JS_SRC = 'https://apis.google.com/js/api.js'
 const JS_SRC = "https://accounts.google.com/gsi/client";
 const SCRIPT_ID = "google-login";
-// const PREVENT_CORS_URL: string = "https://cors.bridged.cc/";
 const PREVENT_CORS_URL: string = "https://corsproxy.io/?";
-
 const _window = window as any;
 
+/**
+ * A component that provides a Google login functionality.
+ * @param {Props} props - The component props.
+ * @returns The LoginSocialGoogle component.
+ */
 const LoginSocialGoogle = ({
 	client_id,
 	scope = "https://www.googleapis.com/auth/userinfo.profile",
@@ -63,11 +65,19 @@ const LoginSocialGoogle = ({
 	const [isSdkLoaded, setIsSdkLoaded] = useState(false);
 	const [instance, setInstance] = useState<any>(null!);
 
+	/**
+	 * useEffect hook that loads the SDK if it is not already loaded.
+	 * @returns None
+	 */
 	useEffect(() => {
 		!isSdkLoaded && load();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isSdkLoaded]);
 
+	/**
+	 * useEffect hook that removes the script node from the DOM when the component unmounts.
+	 * @returns None
+	 */
 	useEffect(
 		() => () => {
 			if (scriptNodeRef.current) scriptNodeRef.current.remove();
@@ -75,10 +85,23 @@ const LoginSocialGoogle = ({
 		[]
 	);
 
+	/**
+	 * Checks if a script with the specified ID exists in the document.
+	 * @returns {boolean} - True if the script exists, false otherwise.
+	 */
 	const checkIsExistsSDKScript = useCallback(() => {
 		return !!document.getElementById(SCRIPT_ID);
 	}, []);
 
+	/**
+	 * Inserts a Google script into the HTML document.
+	 * @param {HTMLDocument} d - The HTML document object.
+	 * @param {string} [s="script"] - The tag name of the script element.
+	 * @param {string} id - The id attribute of the script element.
+	 * @param {string} jsSrc - The source URL of the JavaScript file.
+	 * @param {() => void} cb - The callback function to be executed when the script is loaded.
+	 * @returns None
+	 */
 	const insertScriptGoogle = useCallback(
 		(
 			d: HTMLDocument,
@@ -102,6 +125,11 @@ const LoginSocialGoogle = ({
 		[]
 	);
 
+	/**
+	 * Callback function that is triggered when the "getMe" action is performed.
+	 * @param {objectType} res - The response object received from the action.
+	 * @returns None
+	 */
 	const onGetMe = useCallback(
 		(res: objectType) => {
 			if (typeResponse === "accessToken") {
@@ -154,6 +182,11 @@ const LoginSocialGoogle = ({
 		[typeResponse, onReject, onResolve]
 	);
 
+	/**
+	 * Handles the response from an API call.
+	 * @param {objectType} res - The response object from the API call.
+	 * @returns None
+	 */
 	const handleResponse = useCallback(
 		(res: objectType) => {
 			if (res && access_type === "offline")
@@ -183,6 +216,11 @@ const LoginSocialGoogle = ({
 		[access_type, isOnlyGetToken, onGetMe, onResolve]
 	);
 
+	/**
+	 * Handles an error response from a callback function.
+	 * @param {objectType} res - The error response object.
+	 * @returns None
+	 */
 	const handleError = useCallback(
 		(res: objectType) => {
 			onReject({
@@ -193,6 +231,10 @@ const LoginSocialGoogle = ({
 		[onReject]
 	);
 
+	/**
+	 * Loads the SDK and initializes the Google client for authentication.
+	 * @returns None
+	 */
 	const load = useCallback(() => {
 		if (checkIsExistsSDKScript()) {
 			setIsSdkLoaded(true);
@@ -264,6 +306,10 @@ const LoginSocialGoogle = ({
 		checkIsExistsSDKScript,
 	]);
 
+	/**
+	 * Function to handle Google login.
+	 * @returns None
+	 */
 	const loginGoogle = useCallback(() => {
 		if (!isSdkLoaded) return;
 		if (!_window.google) {
@@ -279,6 +325,13 @@ const LoginSocialGoogle = ({
 		}
 	}, [access_type, instance, isSdkLoaded, load, onLoginStart, onReject]);
 
+	/**
+	 * Renders a div element with the specified class name and click event handler.
+	 * @param {string} className - The class name to apply to the div element.
+	 * @param {function} loginGoogle - The click event handler for the div element.
+	 * @param {ReactNode} children - The child elements to render inside the div element.
+	 * @returns {JSX.Element} - The rendered div element.
+	 */
 	return (
 		<div className={className} onClick={loginGoogle}>
 			{children}
